@@ -1,0 +1,7 @@
+{
+  "name": "dts208prep",
+  "rewrites": [
+    { "source": "/", "destination": "/dts208prep.html" },
+    { "source": "/(.*)", "destination": "/dts208prep.html" }
+  ]
+}
