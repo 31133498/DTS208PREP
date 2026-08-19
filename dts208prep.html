@@ -433,7 +433,15 @@
       outline-offset: 2px;
     }
 
-    .theme-btn-icon { font-size: 14px; line-height: 1; }
+    .theme-btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    .theme-btn-icon svg { width: 14px; height: 14px; display: block; }
 
     /* — Scrollable content — */
     .content {
@@ -464,11 +472,14 @@
     }
 
     .welcome-glyph {
-      font-size: 38px;
-      opacity: 0.18;
+      width: 40px;
+      height: 40px;
+      opacity: 0.22;
       margin-bottom: 8px;
       user-select: none;
+      color: var(--text-secondary);
     }
+    .welcome-glyph svg { width: 40px; height: 40px; display: block; }
 
     .welcome h2 {
       font-size: 17px;
@@ -638,14 +649,21 @@
     <header class="topbar">
       <span class="topbar-title" id="topbarTitle">DTS208PREP</span>
       <button class="theme-btn" id="themeToggle" aria-label="Toggle light/dark theme">
-        <span class="theme-btn-icon" id="themeIcon" aria-hidden="true">☀️</span>
+        <span class="theme-btn-icon" id="themeIcon" aria-hidden="true"></span>
         <span id="themeLabel">Light</span>
       </button>
     </header>
 
     <main class="content" id="mainContent">
       <div class="welcome" id="welcomeState">
-        <div class="welcome-glyph" aria-hidden="true">◈</div>
+        <div class="welcome-glyph" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="6" width="22" height="28" rx="2"/>
+            <line x1="14" y1="14" x2="26" y2="14"/>
+            <line x1="14" y1="20" x2="26" y2="20"/>
+            <line x1="14" y1="26" x2="21" y2="26"/>
+          </svg>
+        </div>
         <h2>Select a topic to begin</h2>
         <p>Choose from the sidebar to open study content for that section.</p>
       </div>
@@ -733,6 +751,25 @@
   ];
 
   /* ════════════════════════════════════════════════════════
+     THEME ICONS (SVG)
+  ════════════════════════════════════════════════════════ */
+  const SUN_SVG = `<svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+    <circle cx="7.5" cy="7.5" r="2.5"/>
+    <line x1="7.5" y1="0.5" x2="7.5" y2="2.5"/>
+    <line x1="7.5" y1="12.5" x2="7.5" y2="14.5"/>
+    <line x1="0.5" y1="7.5" x2="2.5" y2="7.5"/>
+    <line x1="12.5" y1="7.5" x2="14.5" y2="7.5"/>
+    <line x1="2.7" y1="2.7" x2="4.1" y2="4.1"/>
+    <line x1="10.9" y1="10.9" x2="12.3" y2="12.3"/>
+    <line x1="12.3" y1="2.7" x2="10.9" y2="4.1"/>
+    <line x1="4.1" y1="10.9" x2="2.7" y2="12.3"/>
+  </svg>`;
+
+  const MOON_SVG = `<svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+    <path d="M12.5 9.5a5.5 5.5 0 0 1-7-7A6 6 0 1 0 12.5 9.5z"/>
+  </svg>`;
+
+  /* ════════════════════════════════════════════════════════
      STATE
   ════════════════════════════════════════════════════════ */
   let activeId   = null;
@@ -745,7 +782,7 @@
   function setTheme(isDark) {
     dark = isDark;
     document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-    document.getElementById('themeIcon').textContent  = isDark ? '🌙' : '☀️';
+    document.getElementById('themeIcon').innerHTML = isDark ? MOON_SVG : SUN_SVG;
     document.getElementById('themeLabel').textContent = isDark ? 'Dark' : 'Light';
     try { localStorage.setItem('dts208prep:theme', isDark ? 'dark' : 'light'); } catch (_) {}
   }
@@ -755,7 +792,7 @@
     try { saved = localStorage.getItem('dts208prep:theme'); } catch (_) {}
     if (saved === 'dark')  { setTheme(true);  return; }
     if (saved === 'light') { setTheme(false); return; }
-    setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setTheme(false); // default to light mode
   })();
 
   document.getElementById('themeToggle')
