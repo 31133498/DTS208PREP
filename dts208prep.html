@@ -1017,7 +1017,8 @@ function esc(s) {
 }
 
 function toParas(text) {
-  return text.split(/\n\n+/).map(para => {
+  const cleaned = text.replace(/\[(Highlighted|Lecturer-highlighted)\]/g, '').trim();
+  return cleaned.split(/\n\n+/).map(para => {
     const t = para.trim();
     if (!t) return '';
     const lines = t.split('\n').map(l => esc(l.trim())).filter(Boolean);
